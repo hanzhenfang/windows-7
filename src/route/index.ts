@@ -1,12 +1,22 @@
 import { createRouter, createWebHashHistory } from "vue-router"
-import HelloWorld from "@/components/HelloWorld.vue"
 
-const route = createRouter({
+import Loading from "@/pages/Loading/index.vue"
+import Password from "@/pages/Password/index.vue"
+
+export const route = createRouter({
   history: createWebHashHistory("/"),
   routes: [
     {
       path: "/",
-      component: HelloWorld,
+      redirect: "/loading",
+    },
+    {
+      path: "/loading",
+      component: Loading,
+    },
+    {
+      path: "/password",
+      component: Password,
     },
   ],
 })

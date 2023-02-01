@@ -1,6 +1,12 @@
 import { createApp } from "vue"
 import App from "./App.vue"
 
-import "uno.css"
+import { route } from "@/route/index"
 
-createApp(App).mount("#app")
+import "uno.css"
+import "./global.css"
+
+const app = createApp(App)
+
+app.use(route)
+app.mount("#app")
