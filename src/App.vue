@@ -2,7 +2,7 @@
 import { RouterView } from "vue-router"
 </script>
 <template>
-  <div class="w-100vw h-100vh">
+  <div class="w-screen h-screen overflow-hidden">
     <RouterView />
   </div>
 </template>
