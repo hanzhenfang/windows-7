@@ -4,7 +4,9 @@ import { ref, watch, onMounted, onBeforeMount } from "vue"
 //some constants
 let timerID: number
 const welcomText: string = "关注一下韩振方的掘金社区帐号吧～" // will automatic printing when user first enter the page
-const printTextTime: number = 1000 // control the duration of printing "some words page"
+const cursorFlickerFrequency: number = 200 //control the cursor flicker frequency
+const printTextTime: number = 10000 // control the duration of printing "some words page"
+const printSpeed: number = 500 // control the speed of printing word , (one word)/(printSpeed)
 const loadingTime: number = 13000 // control the duration of loadingPage
 // *********************************************
 
@@ -26,7 +28,7 @@ function turnOnSystem() {
     } else {
       flicker.value = !flicker.value
     }
-  }, 500)
+  }, cursorFlickerFrequency)
 }
 
 //tips: automatic printing some words.
@@ -41,7 +43,7 @@ function autoPrintText(text: string) {
     _str = _str + text.substring(_index, _index + 1)
     textAreas.value!.innerText = _str
     _index++
-  }, 500)
+  }, printSpeed)
 }
 
 //tips: read to password page
@@ -152,6 +154,6 @@ onBeforeMount(() => {
   }
 }
 .progress {
-  animation: progress 1.3s linear infinite 1s;
+  animation: progress 1.3s linear infinite 2s;
 }
 </style>
