@@ -1,20 +1,27 @@
 <script lang="ts" setup>
-import { ref, computed, onMounted, onBeforeMount } from "vue"
+import { ref, watch, onMounted, onBeforeMount } from "vue"
 
+//some constants
 let timerID: number
-const welcomText: string = "关注一下韩振方的掘金社区帐号吧～"
+const welcomText: string = "关注一下韩振方的掘金社区帐号吧～" // will automatic printing when user first enter the page
+const printTextTime: number = 1000 // control the duration of printing "some words page"
+const loadingTime: number = 13000 // control the duration of loadingPage
+// *********************************************
+
 const textAreas = ref<HTMLSpanElement>()
 const flicker = ref<boolean>(false)
 const isFlicker = ref<boolean>(true)
+const isLoading = ref<boolean>(false)
 
-//tips: user open the system in first time, let the cursor flicker.
+//tips: if user open the system in first time, make the cursor flicker.
 function turnOnSystem() {
-  let _startTime = Date.now()
+  const _startPrintTime = Date.now()
   timerID = window.setInterval(() => {
-    let _loadingTime = Date.now()
-    if (_loadingTime - _startTime > 9000) {
-      isFlicker.value = false
+    const _printPageTime = Date.now()
+    if (_printPageTime - _startPrintTime > printTextTime) {
       clearInterval(timerID)
+      isFlicker.value = false //cursor stop flicker
+      isLoading.value = true //progress bar start loading
       return
     } else {
       flicker.value = !flicker.value
@@ -22,12 +29,11 @@ function turnOnSystem() {
   }, 500)
 }
 
-//tips: automatic printing some word.
+//tips: automatic printing some words.
 function autoPrintText(text: string) {
   let _str = ""
   let _index = 0
-  let _timerID: number = 0
-  _timerID = window.setInterval(() => {
+  const _timerID = window.setInterval(() => {
     if (_index > text.length - 1) {
       clearInterval(_timerID)
       return
@@ -37,6 +43,21 @@ function autoPrintText(text: string) {
     _index++
   }, 500)
 }
+
+//tips: read to password page
+function stopTheLoadingPage() {
+  if (isLoading.value === false) return
+  let _startLoadingTime = Date.now()
+  const _timerID = setInterval(() => {
+    const _loadingPageTime = Date.now()
+    if (_loadingPageTime - _startLoadingTime > loadingTime) {
+      clearInterval(_timerID)
+      isLoading.value = false
+    }
+  })
+}
+
+watch(isLoading, stopTheLoadingPage)
 
 onMounted(() => {
   turnOnSystem()
@@ -59,24 +80,29 @@ onBeforeMount(() => {
         :class="flicker ? `border-b-0.3rem` : ``"
       ></div>
     </div>
+
     <Transition name="loading">
       <div
-        v-if="!isFlicker"
+        v-if="isLoading"
         class="w-full h-full pt-10% pb-2% flex flex-col items-center justify-between"
       >
         <!-- icon  content -->
-        <div class="max-w-50% relative">
-          <div class="w-full flex">
-            <span class="font-600 text-3rem self-end">Microsoft</span>
-            <img class="grow" src="@/assets/WindowsXP.ico" />
+        <div class="w-full basis-45% flex flex-col items-center p-x-10%">
+          <div class="flex w-full h-full justify-center">
+            <div class="self-end">
+              <span class="font-600 text-3rem"> Microsoft </span>
+            </div>
+            <div class="self-end overflow-hidden">
+              <img class="w-full object-contain" src="@/assets/WindowsXP.ico" />
+            </div>
           </div>
 
-          <div class="w-full">
-            <span class="text-white font-800 text-10rem leading-7rem"
-              >Windows</span
-            >
+          <div class="relative">
+            <span class="text-white font-800 text-7.5rem leading-7rem">
+              Windows
+            </span>
             <span
-              class="absolute right--12rem bottom-2rem text-5rem text-red font-800"
+              class="absolute right--2rem bottom-4rem text-2rem text-red font-800"
               >XP</span
             >
           </div>
@@ -94,9 +120,9 @@ onBeforeMount(() => {
         </div>
 
         <!-- footer content -->
-        <div class="w-full flex justify-between items-baseline">
+        <div class="w-full flex justify-between items-baseline p-x-4%">
           <span class="font-800 text-1rem leading-4.2rem">
-            Copyright® HanZhenFang JueJin
+            Follow® HanZhenFang JueJin
           </span>
           <span class="font-600 text-3rem leading-">Microsoft</span>
         </div>
