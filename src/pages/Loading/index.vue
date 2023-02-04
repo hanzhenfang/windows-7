@@ -1,15 +1,19 @@
 <script lang="ts" setup>
 import { ref, watch, onMounted, onBeforeMount } from "vue"
+import { useRouter } from "vue-router"
 
-//some constants
+import IconCombination from "@/components/IconCombination/index.vue"
+
+//some options constants
 let timerID: number
 const welcomText: string = "关注一下韩振方的掘金社区帐号吧～" // will automatic printing when user first enter the page
 const cursorFlickerFrequency: number = 200 //control the cursor flicker frequency
-const printTextTime: number = 10000 // control the duration of printing "some words page"
+const printTextPageDuration: number = 10000 // control the duration of printing "some words page"
 const printSpeed: number = 500 // control the speed of printing word , (one word)/(printSpeed)
-const loadingTime: number = 13000 // control the duration of loadingPage
+const loadingDuration: number = 5000 // control the duration of loadingPage
 // *********************************************
 
+const router = useRouter()
 const textAreas = ref<HTMLSpanElement>()
 const flicker = ref<boolean>(false)
 const isFlicker = ref<boolean>(true)
@@ -20,7 +24,7 @@ function turnOnSystem() {
   const _startPrintTime = Date.now()
   timerID = window.setInterval(() => {
     const _printPageTime = Date.now()
-    if (_printPageTime - _startPrintTime > printTextTime) {
+    if (_printPageTime - _startPrintTime > printTextPageDuration) {
       clearInterval(timerID)
       isFlicker.value = false //cursor stop flicker
       isLoading.value = true //progress bar start loading
@@ -52,9 +56,10 @@ function stopTheLoadingPage() {
   let _startLoadingTime = Date.now()
   const _timerID = setInterval(() => {
     const _loadingPageTime = Date.now()
-    if (_loadingPageTime - _startLoadingTime > loadingTime) {
+    if (_loadingPageTime - _startLoadingTime > loadingDuration) {
       clearInterval(_timerID)
       isLoading.value = false
+      router.replace({ name: "password" })
     }
   })
 }
@@ -88,27 +93,7 @@ onBeforeMount(() => {
         v-if="isLoading"
         class="w-full h-full pt-10% pb-2% flex flex-col items-center justify-between"
       >
-        <!-- icon  content -->
-        <div class="w-full basis-45% flex flex-col items-center p-x-10%">
-          <div class="flex w-full h-full justify-center">
-            <div class="self-end">
-              <span class="font-600 text-3rem"> Microsoft </span>
-            </div>
-            <div class="self-end overflow-hidden">
-              <img class="w-full object-contain" src="@/assets/WindowsXP.ico" />
-            </div>
-          </div>
-
-          <div class="relative">
-            <span class="text-white font-800 text-7.5rem leading-7rem">
-              Windows
-            </span>
-            <span
-              class="absolute right--2rem bottom-4rem text-2rem text-red font-800"
-              >XP</span
-            >
-          </div>
-        </div>
+        <IconCombination />
 
         <!-- Progress bar content -->
         <div

@@ -12,10 +12,12 @@ export const route = createRouter({
     },
     {
       path: "/loading",
+      name: "loading",
       component: Loading,
     },
     {
       path: "/password",
+      name: "password",
       component: Password,
     },
   ],
