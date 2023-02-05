@@ -9,23 +9,33 @@ import { useRootStore } from "@/store/rootStore"
 import { storeToRefs } from "pinia"
 
 // some options constants
-const loadingDurationTime: number = 1000 // control IconCombination duration
+const loadingDurationTime: number = 5000 // control IconCombination duration
 //**************************************/
 
 const rootStore = useRootStore()
 const { isMobile } = storeToRefs(rootStore)
+
 const isLoading = ref<boolean>(true)
-const isChoice = ref<boolean>(false)
+const isChoice = ref<boolean>(false) // user is click one avatar
+const isLoginSuccess = ref<boolean>(false)
 const iconWrapper = ref<HTMLDivElement>()
 const iconWrapperOffsetWidth = ref()
 
 //tips: when user click one avatar
 function hdlClickAvatar() {
-  isChoice.value = true
+  if (!isChoice.value) {
+    isChoice.value = true
+  } else {
+    isLoginSuccess.value = true
+    setTimeout(() => {
+      window.location.href = "https://juejin.cn/user/3065861918435437"
+    }, 2200)
+  }
 }
 
 function hdlClickBackBtn() {
   isChoice.value = false
+  isLoginSuccess.value = false
 }
 
 const moveLeftAnimation = computed<CSSProperties>(() => {
@@ -100,7 +110,7 @@ watch(isChoice, () => {
 
         <!-- The avatar content, there should distinguish PC and Mobile -->
         <div
-          class="w-50% pl-1rem flex items-center justify-center"
+          class="w-50% h-full pl-1rem flex flex-col items-center justify-center"
           :style="[
             isChoice ? avatarScaleAnimation : { transform: `translateY(2rem)` },
             { transition: `all 2.2s` },
@@ -108,7 +118,7 @@ watch(isChoice, () => {
         >
           <div
             v-if="isMobile"
-            class="w-full h-full flex flex-col items-center justify-center"
+            class="w-full flex flex-col items-center justify-center"
             @click="hdlClickAvatar"
           >
             <MobileLogin />
@@ -126,25 +136,28 @@ watch(isChoice, () => {
 
           <div v-else class="w-full h-full">哈哈</div>
         </div>
-
-        <div
-          v-show="false"
-          class="w-full flex items-center justify-center pl-20%"
-        >
-          <span
-            class="font-600 text-2rem skew-x--25deg text-shadow-[1px_1px_3px_rgba(0,0,0,0.9)]"
-          >
-            欢迎使用
-          </span>
-        </div>
       </div>
+    </div>
+
+    <div
+      class="w-full absolute bottom-1rem flex justify-center px-10%"
+      :style="[
+        isLoginSuccess ? { opacity: 1 } : { opacity: 0 },
+        { transition: 'all 2s' },
+      ]"
+    >
+      <span
+        class="font-600 text-2rem skew-x--25deg text-shadow-[1px_1px_3px_rgba(0,0,0,0.9)] flex-1 text-right"
+      >
+        欢迎使用
+      </span>
     </div>
 
     <!-- footer content -->
     <div
       class="absolute z-99 w-full h-10vh px-5% flex justify-between"
       :style="[
-        isChoice
+        isChoice && !isLoginSuccess
           ? { transform: `translateY(0)` }
           : { transform: `translateY(100%)` },
         { transition: `all 2s` },
