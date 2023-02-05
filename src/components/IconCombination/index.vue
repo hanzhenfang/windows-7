@@ -27,7 +27,7 @@ const winStyle = computed<CSSProperties>(() => {
   const _fontSize = isMobile.value ? props.winSize : 10
   return {
     fontSize: _fontSize + "rem",
-    lineHeight: `${_fontSize * 0.6}rem`,
+    lineHeight: `${_fontSize * 0.7}rem`,
   }
 })
 

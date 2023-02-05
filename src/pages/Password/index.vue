@@ -2,8 +2,8 @@
 import { ref, computed, onMounted, nextTick, watch, CSSProperties } from "vue"
 
 import IconCombination from "@/components/IconCombination/index.vue"
-import PCLogin from "@/pages/Password/index.vue"
 import MobileLogin from "@/pages/Password/MobileLogin/index.vue"
+import PCLogin from "@/pages/Password/PCLogin/index.vue"
 
 import { useRootStore } from "@/store/rootStore"
 import { storeToRefs } from "pinia"
@@ -28,7 +28,11 @@ function hdlClickAvatar() {
   } else {
     isLoginSuccess.value = true
     setTimeout(() => {
-      window.location.href = "https://juejin.cn/user/3065861918435437"
+      if (isMobile) {
+        window.location.href = "https://juejin.cn/user/3065861918435437"
+      } else {
+        window.open("https://juejin.cn/user/3065861918435437")
+      }
     }, 2200)
   }
 }
@@ -134,7 +138,9 @@ watch(isChoice, () => {
             </div>
           </div>
 
-          <div v-else class="w-full h-full">哈哈</div>
+          <div v-else class="w-full h-full flex items-center">
+            <PCLogin />
+          </div>
         </div>
       </div>
     </div>
