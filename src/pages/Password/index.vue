@@ -1,13 +1,41 @@
 <script lang="ts" setup>
-import { ref, onMounted } from "vue"
+import { ref, computed, onMounted, nextTick, watch, CSSProperties } from "vue"
 
 import IconCombination from "@/components/IconCombination/index.vue"
+import PCLogin from "@/pages/Password/index.vue"
+import MobileLogin from "@/pages/Password/MobileLogin/index.vue"
+
+import { useRootStore } from "@/store/rootStore"
+import { storeToRefs } from "pinia"
 
 // some options constants
-const loadingDurationTime: number = 5000 // control IconCombination duration
+const loadingDurationTime: number = 1000 // control IconCombination duration
 //**************************************/
 
+const rootStore = useRootStore()
+const { isMobile } = storeToRefs(rootStore)
 const isLoading = ref<boolean>(true)
+const isChoice = ref<boolean>(false)
+const iconWrapper = ref<HTMLDivElement>()
+const iconWrapperOffsetWidth = ref()
+
+//tips: when user click one avatar
+function hdlClickAvatar() {
+  isChoice.value = !isChoice.value
+}
+
+const moveLeftAnimation = computed<CSSProperties>(() => {
+  return {
+    transform: `translateX(-${iconWrapperOffsetWidth.value}px)`,
+    opacity: `0`,
+  }
+})
+
+const avatarScaleAnimation = computed<CSSProperties>(() => {
+  return {
+    transform: `translateX(-40%) scale(1.5)`,
+  }
+})
 
 function beforeHook() {
   const _startTime = Date.now()
@@ -23,6 +51,12 @@ function beforeHook() {
 onMounted(() => {
   beforeHook()
 })
+
+watch(isChoice, () => {
+  nextTick(() => {
+    iconWrapperOffsetWidth.value = iconWrapper.value?.offsetWidth
+  })
+})
 </script>
 <template>
   <div
@@ -36,35 +70,42 @@ onMounted(() => {
           <IconCombination :winSize="7" />
         </div>
         <div>
-          <span class="text-1.5rem">Windows 正在启动. . .</span>
+          <span class="text-2rem font-600">Windows 正在启动. . .</span>
         </div>
       </div>
 
       <div v-else class="w-full h-full flex">
         <div
-          class="flex-1 w-full flex flex-col items-center justify-center pr-1rem"
+          ref="iconWrapper"
+          class="w-50% flex flex-col items-center justify-center pr-1rem"
+          :style="[isChoice ? moveLeftAnimation : {}, { transition: `2s all` }]"
         >
           <div class="ml-auto">
             <IconCombination :companySize="1.5" :winSize="3" />
           </div>
           <div class="w-full text-right mt-1rem">
-            <span class="text-1.3rem font-400">要开始，请单击您的用户名</span>
+            <span class="text-1.3rem font-600">要开始，请单击您的用户名</span>
           </div>
         </div>
-        <div class="w-0.1rem h-full bg-white"></div>
-        <div class="flex-1 pl-1rem flex items-center justify-center">
-          <div
-            class="h-10rem border-blue border-0.2px rounded-0.5rem border-r-none overflow-hidden"
-          >
-            <div class="h-full bg-#2ec1cc">
-              <div class="w-10rem h-full rounded-0.8rem overflow-hidden">
-                <img
-                  class="object-contain w-full h-full"
-                  src="@/assets/avatar.jpg "
-                />
-              </div>
-            </div>
+
+        <div
+          class="w-0.1rem h-full bg-white"
+          :style="[isChoice ? moveLeftAnimation : {}, { transition: `2s all` }]"
+        ></div>
+
+        <!-- The avatar content, there should distinguish PC and Mobile -->
+        <div
+          class="pl-1rem flex items-center justify-center"
+          :style="[
+            isChoice ? avatarScaleAnimation : {},
+            { transition: `2s all` },
+          ]"
+        >
+          <div v-if="isMobile" @click="hdlClickAvatar">
+            <MobileLogin />
           </div>
+
+          <div v-else class="w-full h-full">哈哈</div>
         </div>
       </div>
 
