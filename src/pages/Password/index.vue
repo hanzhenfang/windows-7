@@ -21,7 +21,11 @@ const iconWrapperOffsetWidth = ref()
 
 //tips: when user click one avatar
 function hdlClickAvatar() {
-  isChoice.value = !isChoice.value
+  isChoice.value = true
+}
+
+function hdlClickBackBtn() {
+  isChoice.value = false
 }
 
 const moveLeftAnimation = computed<CSSProperties>(() => {
@@ -33,7 +37,7 @@ const moveLeftAnimation = computed<CSSProperties>(() => {
 
 const avatarScaleAnimation = computed<CSSProperties>(() => {
   return {
-    transform: `translateX(-40%) scale(1.5)`,
+    transform: `translateX(-50%) scale(1.4)`,
   }
 })
 
@@ -60,7 +64,8 @@ watch(isChoice, () => {
 </script>
 <template>
   <div
-    class="w-full h-full bg-blue border-#0000C4 border-y-10vh overflow-hidden"
+    id="root"
+    class="w-full h-full relative bg-blue border-#0000C4 border-y-10vh"
   >
     <div
       class="w-full h-full border-white border-y-0.2rem flex items-center justify-center pb-10%"
@@ -95,34 +100,68 @@ watch(isChoice, () => {
 
         <!-- The avatar content, there should distinguish PC and Mobile -->
         <div
-          class="pl-1rem flex items-center justify-center"
+          class="w-50% pl-1rem flex items-center justify-center"
           :style="[
-            isChoice ? avatarScaleAnimation : {},
-            { transition: `2s all` },
+            isChoice ? avatarScaleAnimation : { transform: `translateY(2rem)` },
+            { transition: `all 2.2s` },
           ]"
         >
-          <div v-if="isMobile" @click="hdlClickAvatar">
+          <div
+            v-if="isMobile"
+            class="w-full h-full flex flex-col items-center justify-center"
+            @click="hdlClickAvatar"
+          >
             <MobileLogin />
+            <div class="mt-1rem">
+              <span
+                class="text-2rem font-400"
+                :style="[
+                  isChoice ? { opacity: 1 } : { opacity: 0 },
+                  { transition: `all 2s` },
+                ]"
+                >韩振方😊</span
+              >
+            </div>
           </div>
 
           <div v-else class="w-full h-full">哈哈</div>
         </div>
-      </div>
 
-      <!-- <div
-        v-show="true"
-        class="w-full h-full flex items-center justify-center pl-20%"
-      >
-        <span
-          class="font-600 text-4rem skew-x--25deg text-shadow-[1px_1px_3px_rgba(0,0,0,0.9)]"
+        <div
+          v-show="false"
+          class="w-full flex items-center justify-center pl-20%"
         >
-          欢迎使用
-        </span>
-      </div> -->
+          <span
+            class="font-600 text-2rem skew-x--25deg text-shadow-[1px_1px_3px_rgba(0,0,0,0.9)]"
+          >
+            欢迎使用
+          </span>
+        </div>
+      </div>
     </div>
 
     <!-- footer content -->
-    <div></div>
+    <div
+      class="absolute z-99 w-full h-10vh px-5% flex justify-between"
+      :style="[
+        isChoice
+          ? { transform: `translateY(0)` }
+          : { transform: `translateY(100%)` },
+        { transition: `all 2s` },
+      ]"
+    >
+      <div class="flex items-center" @click="hdlClickBackBtn">
+        <img src="@/assets/systemIcon/关机.ico" />
+        <span class="text-2rem font-500 ml-1rem">返回</span>
+      </div>
+
+      <div class="max-w-14rem flex items-center">
+        <span class=""
+          >登录后, 你可以添加或更改账户，请转到“控制面板”,
+          并单击“用户账户”。</span
+        >
+      </div>
+    </div>
   </div>
 </template>
 
