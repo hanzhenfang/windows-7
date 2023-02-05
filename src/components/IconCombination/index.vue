@@ -1,22 +1,44 @@
 <script lang="ts" setup>
 import { ref, computed, nextTick, CSSProperties } from "vue"
 
+import { useRootStore } from "@/store/rootStore"
+import { storeToRefs } from "pinia"
+
 const props = withDefaults(
-  defineProps<{ companySize: number; winSize: number; xpSize: number }>(),
+  defineProps<{ companySize: number; winSize: number }>(),
   {
     companySize: 3,
-    winSize: 7.5,
-    xpSize: 2,
+    winSize: 7, //then main property of this component
   }
 )
 
+const rootStore = useRootStore()
+const { isMobile } = storeToRefs(rootStore)
+console.log("isMobile.value", isMobile.value)
 const winSpan = ref<HTMLSpanElement>()
 const companySpan = ref<HTMLSpanElement>()
-const lineHight = ref<number>(7)
+
+const lineHight = ref<number>(8)
 
 const iconBoxWidth = computed(() => {
   const winSpanWidth = winSpan.value?.offsetWidth!
   return winSpanWidth + 8
+})
+
+const winStyle = computed<CSSProperties>(() => {
+  const _fontSize = isMobile.value ? props.winSize : 10
+  console.log("_fontSize", _fontSize)
+  return {
+    fontSize: _fontSize + "rem",
+    lineHeight: `${lineHight.value}rem`,
+  }
+})
+
+const companyStyle = computed<CSSProperties>(() => {
+  const _fontSize = isMobile.value ? props.companySize : 5
+  return {
+    fontSize: _fontSize + "rem",
+  }
 })
 
 const xpStyle = computed<CSSProperties>(() => {
@@ -32,7 +54,7 @@ const xpStyle = computed<CSSProperties>(() => {
 
 nextTick(() => {
   const _fontSize = companySpan.value?.style.fontSize!
-  lineHight.value = parseInt(_fontSize) + 1
+  lineHight.value = parseInt(_fontSize) + 1.5
 })
 </script>
 <template>
@@ -45,22 +67,16 @@ nextTick(() => {
       :style="{ width: `${iconBoxWidth}px` }"
     >
       <div class="self-end basis-40%">
-        <span ref="companySpan" :style="{ fontSize: `${companySize}rem` }">
-          Microsoft
-        </span>
+        <span ref="companySpan" :style="companyStyle"> Microsoft </span>
       </div>
 
       <div class="self-end overflow-hidden">
-        <img class="max-w-80% object-contain" src="@/assets/WindowsXP.ico" />
+        <img class="w-full object-contain" src="@/assets/WindowsXP.ico" />
       </div>
     </div>
 
     <div class="relative">
-      <span
-        ref="winSpan"
-        class="text-white font-800"
-        :style="{ fontSize: `${winSize}rem`, lineHeight: `${lineHight}rem` }"
-      >
+      <span ref="winSpan" class="text-white font-800" :style="winStyle">
         Windows
       </span>
       <span :style="xpStyle">XP</span>

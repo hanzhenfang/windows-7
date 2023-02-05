@@ -3,12 +3,11 @@ import { ref, onMounted } from "vue"
 
 import IconCombination from "@/components/IconCombination/index.vue"
 
-import { isMobile } from "@/utils/isMobile"
-
+// some options constants
 const loadingDurationTime: number = 3000 // control IconCombination duration
+//**************************************/
 
 const isLoading = ref<boolean>(true)
-const _isMobile = !!isMobile()
 
 function beforeHook() {
   const _startTime = Date.now()
@@ -46,7 +45,7 @@ onMounted(() => {
           class="flex-1 w-full flex flex-col items-center justify-center pr-1rem"
         >
           <div class="ml-auto">
-            <IconCombination :companySize="1.5" :winSize="3.5" />
+            <IconCombination :companySize="1.5" :winSize="3" />
           </div>
           <div class="w-full text-right mt-1rem">
             <span class="text-1.3rem font-400">要开始，请单击您的用户名</span>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch, onMounted, onBeforeMount } from "vue"
+import { ref, watch, onMounted, nextTick, onBeforeMount } from "vue"
 import { useRouter } from "vue-router"
 
 import IconCombination from "@/components/IconCombination/index.vue"
@@ -7,9 +7,9 @@ import IconCombination from "@/components/IconCombination/index.vue"
 //some options constants
 let timerID: number
 const welcomText: string = "关注一下韩振方的掘金社区帐号吧～" // will automatic printing when user first enter the page
-const cursorFlickerFrequency: number = 200 //control the cursor flicker frequency
-const printTextPageDuration: number = 10000 // control the duration of printing "some words page"
-const printSpeed: number = 500 // control the speed of printing word , (one word)/(printSpeed)
+const cursorFlickerFrequency: number = 20000 //control the cursor flicker frequency
+const printTextPageDuration: number = 1000 // control the duration of printing "some words page"
+const printSpeed: number = 500 // control the speed of printing word, (one word)/(printSpeed)
 const loadingDuration: number = 5000 // control the duration of loadingPage
 // *********************************************
 
@@ -19,7 +19,7 @@ const flicker = ref<boolean>(false)
 const isFlicker = ref<boolean>(true)
 const isLoading = ref<boolean>(false)
 
-//tips: if user open the system in first time, make the cursor flicker.
+//tips: if user opens the system first time, make the cursor flicker.
 function turnOnSystem() {
   const _startPrintTime = Date.now()
   timerID = window.setInterval(() => {
@@ -40,6 +40,7 @@ function autoPrintText(text: string) {
   let _str = ""
   let _index = 0
   const _timerID = window.setInterval(() => {
+    if (!textAreas.value) return
     if (_index > text.length - 1) {
       clearInterval(_timerID)
       return
@@ -68,6 +69,9 @@ watch(isLoading, stopTheLoadingPage)
 
 onMounted(() => {
   turnOnSystem()
+})
+
+nextTick(() => {
   autoPrintText(welcomText)
 })
 
