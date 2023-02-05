@@ -4,7 +4,7 @@ import { ref, onMounted } from "vue"
 import IconCombination from "@/components/IconCombination/index.vue"
 
 // some options constants
-const loadingDurationTime: number = 3000 // control IconCombination duration
+const loadingDurationTime: number = 5000 // control IconCombination duration
 //**************************************/
 
 const isLoading = ref<boolean>(true)

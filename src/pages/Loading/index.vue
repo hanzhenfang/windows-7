@@ -7,9 +7,9 @@ import IconCombination from "@/components/IconCombination/index.vue"
 //some options constants
 let timerID: number
 const welcomText: string = "关注一下韩振方的掘金社区帐号吧～" // will automatic printing when user first enter the page
-const cursorFlickerFrequency: number = 20000 //control the cursor flicker frequency
-const printTextPageDuration: number = 1000 // control the duration of printing "some words page"
-const printSpeed: number = 500 // control the speed of printing word, (one word)/(printSpeed)
+const cursorFlickerFrequency: number = 200 //control the cursor flicker frequency
+const printTextPageDuration: number = 8000 // control the duration of printing "some words page"
+const printSpeed: number = 400 // control the speed of printing word, (one word)/(printSpeed)
 const loadingDuration: number = 5000 // control the duration of loadingPage
 // *********************************************
 

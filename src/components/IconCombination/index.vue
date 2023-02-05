@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, computed, nextTick, CSSProperties } from "vue"
+import { ref, computed, CSSProperties } from "vue"
 
 import { useRootStore } from "@/store/rootStore"
 import { storeToRefs } from "pinia"
@@ -14,11 +14,9 @@ const props = withDefaults(
 
 const rootStore = useRootStore()
 const { isMobile } = storeToRefs(rootStore)
-console.log("isMobile.value", isMobile.value)
+
 const winSpan = ref<HTMLSpanElement>()
 const companySpan = ref<HTMLSpanElement>()
-
-const lineHight = ref<number>(8)
 
 const iconBoxWidth = computed(() => {
   const winSpanWidth = winSpan.value?.offsetWidth!
@@ -27,10 +25,9 @@ const iconBoxWidth = computed(() => {
 
 const winStyle = computed<CSSProperties>(() => {
   const _fontSize = isMobile.value ? props.winSize : 10
-  console.log("_fontSize", _fontSize)
   return {
     fontSize: _fontSize + "rem",
-    lineHeight: `${lineHight.value}rem`,
+    lineHeight: `${_fontSize * 0.6}rem`,
   }
 })
 
@@ -42,25 +39,20 @@ const companyStyle = computed<CSSProperties>(() => {
 })
 
 const xpStyle = computed<CSSProperties>(() => {
+  const _fontSize = isMobile.value ? props.winSize : 10
   return {
     position: "absolute",
-    fontSize: props.winSize / 2 + "rem",
-    right: -props.winSize * 0.625 + "rem",
-    bottom: props.winSize / 4 + "rem",
+    fontSize: _fontSize / 2 + "rem",
+    bottom: _fontSize / 4 + "rem",
     color: "red",
     fontWeight: 800,
   }
-})
-
-nextTick(() => {
-  const _fontSize = companySpan.value?.style.fontSize!
-  lineHight.value = parseInt(_fontSize) + 1.5
 })
 </script>
 <template>
   <div
     class="w-full basis-45% flex flex-col items-center"
-    :style="{ paddingRight: `${winSize / 2}rem` }"
+    :style="{ paddingRight: `${parseInt(xpStyle.fontSize as string) + 1}rem` }"
   >
     <div
       class="flex h-full justify-center"
