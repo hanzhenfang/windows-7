@@ -35,7 +35,7 @@ function turnOnSystem() {
   }, cursorFlickerFrequency)
 }
 
-//tips: automatic printing some words.
+//tips: automatic printing welcome words.
 function autoPrintText(text: string) {
   let _str = ""
   let _index = 0

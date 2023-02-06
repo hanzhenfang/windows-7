@@ -15,9 +15,9 @@ const loadingDurationTime: number = 5000 // control IconCombination duration
 const rootStore = useRootStore()
 const { isMobile } = storeToRefs(rootStore)
 
-const isLoading = ref<boolean>(true)
-const isChoice = ref<boolean>(false) // user is click one avatar
-const isLoginSuccess = ref<boolean>(false)
+const isLoading = ref<boolean>(true) // control before show avatar
+const isChoice = ref<boolean>(false) // whether user has clicked one avatar
+const isLoginSuccess = ref<boolean>(false) //
 const iconWrapper = ref<HTMLDivElement>()
 const iconWrapperOffsetWidth = ref()
 
@@ -97,7 +97,10 @@ watch(isChoice, () => {
         <div
           ref="iconWrapper"
           class="w-50% flex flex-col items-center justify-center pr-1rem"
-          :style="[isChoice ? moveLeftAnimation : {}, { transition: `2s all` }]"
+          :style="[
+            isChoice ? moveLeftAnimation : {},
+            { transition: `1.5s all` },
+          ]"
         >
           <div class="ml-auto">
             <IconCombination :companySize="1.5" :winSize="3" />
@@ -109,7 +112,10 @@ watch(isChoice, () => {
 
         <div
           class="w-0.1rem h-full bg-white"
-          :style="[isChoice ? moveLeftAnimation : {}, { transition: `2s all` }]"
+          :style="[
+            isChoice ? moveLeftAnimation : {},
+            { transition: `1.5s all` },
+          ]"
         ></div>
 
         <!-- The avatar content, there should distinguish PC and Mobile -->
@@ -117,7 +123,7 @@ watch(isChoice, () => {
           class="w-50% h-full pl-1rem flex flex-col items-center justify-center"
           :style="[
             isChoice ? avatarScaleAnimation : { transform: `translateY(2rem)` },
-            { transition: `all 2.2s` },
+            { transition: `all 1.6s` },
           ]"
         >
           <div
@@ -131,7 +137,7 @@ watch(isChoice, () => {
                 class="text-2rem font-400"
                 :style="[
                   isChoice ? { opacity: 1 } : { opacity: 0 },
-                  { transition: `all 2s` },
+                  { transition: `all 1.5s` },
                 ]"
                 >韩振方😊</span
               >
@@ -149,7 +155,7 @@ watch(isChoice, () => {
       class="w-full absolute bottom-1rem flex justify-center px-10%"
       :style="[
         isLoginSuccess ? { opacity: 1 } : { opacity: 0 },
-        { transition: 'all 2s' },
+        { transition: 'all 1.5s' },
       ]"
     >
       <span
@@ -166,7 +172,7 @@ watch(isChoice, () => {
         isChoice && !isLoginSuccess
           ? { transform: `translateY(0)` }
           : { transform: `translateY(100%)` },
-        { transition: `all 2s` },
+        { transition: `all 1.5s` },
       ]"
     >
       <div class="flex items-center" @click="hdlClickBackBtn">
