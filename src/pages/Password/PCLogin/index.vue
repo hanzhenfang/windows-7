@@ -1,9 +1,47 @@
 <script lang="ts" setup>
-import { ref, nextTick } from "vue"
+import { ref, reactive, computed, watch, nextTick, CSSProperties } from "vue"
+
+import { sleep } from "@/utils/sleep"
+import { off } from "process"
+
+const wrapper = ref<HTMLDivElement>()
+const avatarBox = ref<HTMLDivElement>()
 
 const isHover = ref<boolean>(false)
-const avatarBox = ref<HTMLDivElement>()
+const canSlide = ref<boolean>(false)
 const avatarBoxOffsetHeight = ref<number>(92)
+const avatarBoxOffsetWidth = ref<number>(0)
+const wrapperOffsetWidth = ref<number>(0)
+const avatarSwiperRect = reactive({
+  startClientX: 0,
+  offsetLeft: 0, // key point: should konw this property can do
+})
+
+const wrapperStyle = computed<CSSProperties>(() => {
+  return {
+    height: isHover.value ? `9.5rem` : `12rem`,
+    width: isHover.value ? `70%` : `80%`,
+    padding: isHover.value ? `0` : `2%`,
+    boxShadow: isHover.value
+      ? `1px 1px 5px 1px #4b5cc4`
+      : `0px 1px 8px 1px rgba(255,255,255,0.2)`,
+    transition: `all 1s `,
+  }
+})
+
+const avatarBoxStyle = computed<CSSProperties>(() => {
+  return {
+    border: isHover.value ? `1px solid black` : `0.5px solid white`,
+    boxShadow: isHover.value ? `` : `1px 1px 10px 2px black`,
+    transition: `all 1s`,
+  }
+})
+
+//tips: ready to slide.
+function collectSlideData() {
+  avatarBoxOffsetWidth.value = avatarBox.value?.offsetWidth ?? 0 //99
+  wrapperOffsetWidth.value = wrapper.value?.offsetWidth ?? 0 //405
+}
 
 function onMouseEnterAvatar() {
   isHover.value = true
@@ -13,49 +51,76 @@ function onMouseLeaveAvatar() {
   isHover.value = false
 }
 
+function onMouseDown(e: MouseEvent) {
+  console.log("e.target", e.target)
+  console.log("e", e)
+  avatarSwiperRect.startClientX = e.clientX
+  avatarSwiperRect.offsetLeft = e.offsetX
+}
+
+function onMouseMove(e: MouseEvent) {
+  if (!canSlide.value) return
+  e.preventDefault()
+  const _MAX_DISTANCE =
+    wrapperOffsetWidth.value -
+    avatarBoxOffsetWidth.value +
+    avatarSwiperRect.offsetLeft
+
+  let moveX: number = e.clientX - avatarSwiperRect.startClientX
+
+  if (moveX > 0) {
+    moveX = moveX > _MAX_DISTANCE ? _MAX_DISTANCE : moveX
+  }
+
+  if (moveX < 0) {
+  }
+
+  avatarBox.value!.style.transition = "all 0.1s"
+  avatarBox.value!.style.transform = `translateX(${moveX}px)`
+}
+
+watch(isHover, async (newValue, oldValue) => {
+  if (!newValue) {
+    canSlide.value = false
+    avatarBox.value!.style.transition = "all 0.1s"
+    avatarBox.value!.style.transform = `translateX(0px)`
+    return
+  } // if mouse move leave,noting to do
+  await sleep(1000)
+  if (!isHover.value) {
+    canSlide.value = false
+    return
+  }
+  collectSlideData()
+  canSlide.value = true
+})
+
 nextTick(() => {
   avatarBoxOffsetHeight.value = avatarBox.value!.offsetHeight
-  console.log("avatarBoxOffsetWidth.value", avatarBoxOffsetHeight.value)
 })
 </script>
 <template>
   <div class="w-full h-full flex items-center">
     <div
-      class="w-80% border-2px border-#44cef6 flex items-center rounded-1rem"
-      :style="[
-        isHover
-          ? {
-              height: `9.5rem`,
-              width: `70%`,
-              padding: `0`,
-              boxShadow: `1px 1px 5px 1px #4b5cc4`,
-            }
-          : {
-              height: `12rem `,
-              width: `80%`,
-
-              padding: `2%`,
-              boxShadow: `0px 1px 8px 1px rgba(255,255,255,0.2)`,
-            },
-        { transition: `all 1s ` },
-      ]"
+      ref="wrapper"
+      class="border-2px border-#44cef6 flex items-center rounded-1rem"
+      :style="wrapperStyle"
     >
       <div
         ref="avatarBox"
+        :style="avatarBoxStyle"
         class="h-fit border-white border-0.2px rounded-1rem overflow-hidden"
-        :style="[
-          isHover
-            ? { border: `1px solid black` }
-            : {
-                border: `0.5px solid white`,
-                boxShadow: `1px 1px 10px 2px black`,
-              },
-          { transition: `all 1s` },
-        ]"
-        @mouseenter="onMouseEnterAvatar"
-        @mouseleave="onMouseLeaveAvatar"
+        @mouseenter.stop="onMouseEnterAvatar"
+        @mouseleave.stop="onMouseLeaveAvatar"
+        @mousedown="onMouseDown"
+        @mousemove="onMouseMove"
+        @mouseup=""
       >
-        <img class="block h-9rem object-contain" src="@/assets/avatar.jpg" />
+        <img
+          @click.stop=""
+          class="block h-9rem object-contain"
+          src="@/assets/avatar.jpg"
+        />
       </div>
 
       <div

@@ -9,7 +9,7 @@ import { useRootStore } from "@/store/rootStore"
 import { storeToRefs } from "pinia"
 
 // some options constants
-const loadingDurationTime: number = 5000 // control IconCombination duration
+const loadingDurationTime: number = 1000 // control IconCombination duration
 //**************************************/
 
 const rootStore = useRootStore()
