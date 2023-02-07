@@ -14,7 +14,7 @@ const avatarBoxOffsetWidth = ref<number>(0)
 const wrapperOffsetWidth = ref<number>(0)
 const avatarSwiperRect = reactive({
   startClientX: 0,
-  offsetLeft: 0, // key point: should konw this property can do
+  offsetLeft: 0, // key point: the distance between wrapper'left and StartClientX
 })
 
 const wrapperStyle = computed<CSSProperties>(() => {
@@ -52,8 +52,6 @@ function onMouseLeaveAvatar() {
 }
 
 function onMouseDown(e: MouseEvent) {
-  console.log("e.target", e.target)
-  console.log("e", e)
   avatarSwiperRect.startClientX = e.clientX
   avatarSwiperRect.offsetLeft = e.offsetX
 }
