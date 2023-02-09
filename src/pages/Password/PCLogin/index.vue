@@ -2,7 +2,6 @@
 import { ref, reactive, computed, watch, nextTick, CSSProperties } from "vue"
 
 import { sleep } from "@/utils/sleep"
-import { off } from "process"
 
 const wrapper = ref<HTMLDivElement>()
 const avatarBox = ref<HTMLDivElement>()
@@ -80,7 +79,6 @@ function onMouseMove(e: MouseEvent) {
 watch(isHover, async (newValue, oldValue) => {
   if (!newValue) {
     canSlide.value = false
-    avatarBox.value!.style.transition = "all 0.1s"
     avatarBox.value!.style.transform = `translateX(0px)`
     return
   } // if mouse move leave,noting to do
@@ -115,9 +113,9 @@ nextTick(() => {
         @mouseup=""
       >
         <img
-          @click.stop=""
           class="block h-9rem object-contain"
           src="@/assets/avatar.jpg"
+          draggable="false"
         />
       </div>
 
