@@ -36,7 +36,7 @@ const avatarBoxStyle = computed<CSSProperties>(() => {
   }
 })
 
-//tips: ready to slide.
+//tips: ready to slide, collect current pointer info.
 function collectSlideData() {
   avatarBoxOffsetWidth.value = avatarBox.value?.offsetWidth ?? 0 //99
   wrapperOffsetWidth.value = wrapper.value?.offsetWidth ?? 0 //405
@@ -58,22 +58,16 @@ function onMouseDown(e: MouseEvent) {
 function onMouseMove(e: MouseEvent) {
   if (!canSlide.value) return
   e.preventDefault()
-  const _MAX_DISTANCE =
+  const _MAX__OFFSET_DISTANCE =
     wrapperOffsetWidth.value -
     avatarBoxOffsetWidth.value +
     avatarSwiperRect.offsetLeft
 
-  let moveX: number = e.clientX - avatarSwiperRect.startClientX
-
-  if (moveX > 0) {
-    moveX = moveX > _MAX_DISTANCE ? _MAX_DISTANCE : moveX
+  document.onmousemove = function (e: MouseEvent) {
+    const { clientX, clientY } = e
+    console.log("clientX", clientX)
+    console.log("clientY", clientY)
   }
-
-  if (moveX < 0) {
-  }
-
-  avatarBox.value!.style.transition = "all 0.1s"
-  avatarBox.value!.style.transform = `translateX(${moveX}px)`
 }
 
 watch(isHover, async (newValue, oldValue) => {

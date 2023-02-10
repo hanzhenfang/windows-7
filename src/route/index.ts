@@ -9,16 +9,19 @@ export const route = createRouter({
     {
       path: "/",
       redirect: "/loading",
-    },
-    {
-      path: "/loading",
-      name: "loading",
-      component: Loading,
-    },
-    {
-      path: "/password",
-      name: "password",
-      component: Password,
+      children: [
+        {
+          path: "loading",
+          name: "loading",
+          component: Loading,
+        },
+
+        {
+          path: "password",
+          name: "password",
+          component: Password,
+        },
+      ],
     },
   ],
 })
