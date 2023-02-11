@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted, nextTick, watch, CSSProperties } from "vue"
+import { useRouter } from "vue-router"
 
 import IconCombination from "@/components/IconCombination/index.vue"
 import MobileLogin from "@/pages/Password/MobileLogin/index.vue"
@@ -12,14 +13,16 @@ import { storeToRefs } from "pinia"
 const loadingDurationTime: number = 1000 // control IconCombination duration
 //**************************************/
 
+const router = useRouter()
 const rootStore = useRootStore()
 const { isMobile } = storeToRefs(rootStore)
+
+const iconWrapper = ref<HTMLDivElement>()
+const iconWrapperOffsetWidth = ref()
 
 const isLoading = ref<boolean>(true) // control before show avatar
 const isChoice = ref<boolean>(false) // whether user has clicked one avatar
 const isLoginSuccess = ref<boolean>(false) //
-const iconWrapper = ref<HTMLDivElement>()
-const iconWrapperOffsetWidth = ref()
 
 //tips: when user click one avatar
 function hdlClickAvatar() {
@@ -29,7 +32,7 @@ function hdlClickAvatar() {
     isLoginSuccess.value = true
     setTimeout(() => {
       if (isMobile) {
-        window.location.href = "https://juejin.cn/user/3065861918435437"
+        router.push({ name: "desktop" })
       } else {
         window.open("https://juejin.cn/user/3065861918435437")
       }
@@ -66,14 +69,14 @@ function beforeHook() {
   })
 }
 
-onMounted(() => {
-  beforeHook()
-})
-
 watch(isChoice, () => {
   nextTick(() => {
     iconWrapperOffsetWidth.value = iconWrapper.value?.offsetWidth
   })
+})
+
+onMounted(() => {
+  beforeHook()
 })
 </script>
 <template>
@@ -95,6 +98,7 @@ watch(isChoice, () => {
 
       <div v-else class="w-full h-full flex">
         <div
+          @click="router.push({ name: 'desktop' })"
           ref="iconWrapper"
           class="w-50% flex flex-col items-center justify-center pr-1rem"
           :style="[
