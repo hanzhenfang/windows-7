@@ -12,9 +12,11 @@ export class ShutDownModalCreator {
   container: HTMLElement
   isShow: boolean
   bodyEl: HTMLBodyElement
+  appEl: HTMLDivElement
   closeModal: () => void
   constructor() {
     this.bodyEl = document.body as HTMLBodyElement
+    this.appEl = document.getElementById("app") as HTMLDivElement
     this.container = document.createElement("div")
     this.closeModal = this.dismiss.bind(this)
     this.isShow = false
@@ -35,7 +37,7 @@ export class ShutDownModalCreator {
         return
       }
       scaleValue = scaleValue + 15
-      this.bodyEl.style.filter = `grayscale(${scaleValue}%)`
+      this.appEl.style.filter = `grayscale(${scaleValue}%)`
     }, 200)
   }
 
@@ -44,8 +46,7 @@ export class ShutDownModalCreator {
       render(null, this.container)
       document.body.removeChild(this.container)
       this.isShow = false
-
-      this.bodyEl.style.filter = "grayscale(0)"
+      this.appEl.style.filter = "grayscale(0)"
       document.body?.removeEventListener("click", this.closeModal)
     }
   }
