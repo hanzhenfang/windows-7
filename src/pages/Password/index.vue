@@ -1,13 +1,16 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted, nextTick, watch, CSSProperties } from "vue"
 import { useRouter } from "vue-router"
+import { storeToRefs } from "pinia"
 
-import IconCombination from "@/components/IconCombination/index.vue"
 import MobileLogin from "@/pages/Password/MobileLogin/index.vue"
 import PCLogin from "@/pages/Password/PCLogin/index.vue"
+import LoginFooter from "@/pages/Password/LoginFooter/index.vue"
+import IconCombination from "@/components/IconCombination/index.vue"
+import ShutDown from "@/components/Modal/ShutDown/ShutDown.vue"
 
 import { useRootStore } from "@/store/rootStore"
-import { storeToRefs } from "pinia"
+import { ShutDownModalCreator } from "@/components/Modal/ShutDown/index"
 
 // some options constants
 const loadingDurationTime: number = 1000 // control IconCombination duration
@@ -19,10 +22,20 @@ const { isMobile } = storeToRefs(rootStore)
 
 const iconWrapper = ref<HTMLDivElement>()
 const iconWrapperOffsetWidth = ref()
+const shutDownModal = new ShutDownModalCreator()
 
 const isLoading = ref<boolean>(true) // control before show avatar
 const isChoice = ref<boolean>(false) // whether user has clicked one avatar
-const isLoginSuccess = ref<boolean>(false) //
+const isLoginSuccess = ref<boolean>(false) //XXX: future to do
+
+const isShowFooter = computed<boolean>(() => {
+  const _isShow = isMobile.value ? isChoice.value : true
+  return _isShow && !isLoading.value
+})
+
+const closeBtnText = computed<string>(() => {
+  return isMobile.value ? "返回" : "关闭"
+})
 
 //tips: when user click one avatar
 function hdlClickAvatar() {
@@ -40,11 +53,6 @@ function hdlClickAvatar() {
   }
 }
 
-function hdlClickBackBtn() {
-  isChoice.value = false
-  isLoginSuccess.value = false
-}
-
 const moveLeftAnimation = computed<CSSProperties>(() => {
   return {
     transform: `translateX(-${iconWrapperOffsetWidth.value}px)`,
@@ -57,6 +65,20 @@ const avatarScaleAnimation = computed<CSSProperties>(() => {
     transform: `translateX(-50%) scale(1.4)`,
   }
 })
+
+//tips: the close Btn
+function hdlClickBackBtn() {
+  if (isMobile.value) {
+    isChoice.value = false
+    isLoginSuccess.value = false
+  } else {
+    if (shutDownModal.isShow) {
+      shutDownModal.dismiss()
+      return
+    }
+    shutDownModal.present()
+  }
+}
 
 function beforeHook() {
   const _startTime = Date.now()
@@ -170,27 +192,12 @@ onMounted(() => {
     </div>
 
     <!-- footer content -->
-    <div
-      class="absolute z-99 w-full h-10vh px-5% flex justify-between"
-      :style="[
-        isChoice && !isLoginSuccess
-          ? { transform: `translateY(0)` }
-          : { transform: `translateY(100%)` },
-        { transition: `all 1.5s` },
-      ]"
-    >
-      <div class="flex items-center" @click="hdlClickBackBtn">
-        <img src="@/assets/systemIcon/关机.ico" />
-        <span class="text-2rem font-500 ml-1rem">返回</span>
-      </div>
-
-      <div class="max-w-14rem flex items-center">
-        <span class=""
-          >登录后, 你可以添加或更改账户，请转到“控制面板”,
-          并单击“用户账户”。</span
-        >
-      </div>
-    </div>
+    <LoginFooter
+      :isShow="isShowFooter"
+      :isLoginSuccess="isLoginSuccess"
+      :closeBtnText="closeBtnText"
+      @clickCloseBtn="hdlClickBackBtn"
+    />
   </div>
 </template>
 

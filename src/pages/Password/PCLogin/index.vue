@@ -65,8 +65,6 @@ function onMouseMove(e: MouseEvent) {
 
   document.onmousemove = function (e: MouseEvent) {
     const { clientX, clientY } = e
-    console.log("clientX", clientX)
-    console.log("clientY", clientY)
   }
 }
 
@@ -114,17 +112,14 @@ nextTick(() => {
       </div>
 
       <div
-        v-if="!isHover"
         class="ml-2rem skew-x--20"
         :style="[
           isHover ? { opacity: 0 } : { opacity: 1 },
-          { transition: `all 2s` },
+          { transition: `all 1s` },
         ]"
       >
         <span class="text-3rem font-600">向右拖拽解锁</span>
       </div>
-
-      <div v-else="isHover"></div>
     </div>
   </div>
 </template>
