@@ -4,6 +4,7 @@ import { useRootStore } from "@/store/rootStore"
 import { storeToRefs } from "pinia"
 
 import { showDownIconGroup } from "@/pages/DeskTop/IconGroup/iconGroup"
+import { openPersonalJueJin } from "@/utils/openJueJin"
 
 import type { CSSProperties } from "vue"
 
@@ -48,7 +49,10 @@ nextTick(() => {
         <img class="w-10% h-full object-contain" src="@/assets/windowsXP.png" />
       </div>
 
-      <div class="w-full grow flex px-10% bg-#7F9AEF border-y-2px border-white">
+      <div
+        @click.stop="openPersonalJueJin"
+        class="w-full grow flex px-10% bg-#7F9AEF border-y-2px border-white"
+      >
         <div
           v-for="item in showDownIconGroup"
           class="flex flex-1 flex-col items-center justify-center"

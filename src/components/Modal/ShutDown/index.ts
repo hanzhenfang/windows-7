@@ -1,10 +1,3 @@
-//toast 使用方法
-//1.在别的vue组件内 import ToastCreator from "@/component/toast/toast.ts"
-//2.const toast = new ToastCreator([,options]),
-//3.必须添加一个配置对象 {message:"string",duration?:number,position?:string}
-//4.然后调用toast.present()方法即可
-//5.一般必填 message 选项,如果不填写duration和position,则采用默认值1500ms,和底部
-
 import { h, render } from "vue"
 import ShutDownModal from "./ShutDown.vue"
 
