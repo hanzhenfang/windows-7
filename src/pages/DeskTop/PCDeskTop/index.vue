@@ -6,6 +6,7 @@ import Footer from "@/pages/DeskTop/Footer/index.vue"
 
 import { openContextMenus } from "@/components/ClickMenu/index"
 
+import DeskBg from "@/assets/deskbg.jpg"
 import LoginAudio from "@/assets/audio/login.mp3"
 
 let timerID: number
@@ -33,7 +34,8 @@ onBeforeUnmount(() => {
 <template>
   <div
     id="PCDesktop"
-    class="relative w-full h-full bg-[url(src/assets/desktopBackground.jpg)] bg-center"
+    class="relative w-full h-full bg-center"
+    :style="{ backgroundImage: `url(${DeskBg})`, backgroundPosition: `center` }"
   >
     <div class="w-full h-full flex flex-col">
       <!-- content -->

@@ -151,7 +151,7 @@ onBeforeUnmount(() => {
       <div
         ref="avatarBox"
         :style="avatarBoxStyle"
-        class="h-fit border-white rounded-1rem overflow-hidden bg-red"
+        class="h-fit border-white rounded-1rem overflow-hidden bg-red cursor-pointer"
         @mouseenter.stop="onMouseEnterAvatar"
         @mousedown="onMouseDown"
         @mousemove="onMouseMove"
@@ -172,7 +172,7 @@ onBeforeUnmount(() => {
           { transition: `all 1s` },
         ]"
       >
-        <span class="text-3rem font-600">向右拖拽解锁</span>
+        <span class="text-3rem font-600">向右拖拽解锁屏幕</span>
       </div>
     </div>
   </div>
