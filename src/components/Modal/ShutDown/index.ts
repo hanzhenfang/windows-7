@@ -1,9 +1,9 @@
-import { h, render } from "vue"
+import { h, render, Ref, ref } from "vue"
 import ShutDownModal from "./ShutDown.vue"
 
 export class ShutDownModalCreator {
   container: HTMLElement
-  isShow: boolean
+  isShow: Ref<boolean>
   bodyEl: HTMLBodyElement
   appEl: HTMLDivElement
   closeModal: () => void
@@ -12,14 +12,14 @@ export class ShutDownModalCreator {
     this.appEl = document.getElementById("app") as HTMLDivElement
     this.container = document.createElement("div")
     this.closeModal = this.dismiss.bind(this)
-    this.isShow = false
+    this.isShow = ref<boolean>(false)
   }
 
   present() {
     const modal = h(ShutDownModal, { closeModal: this.closeModal })
     render(modal, this.container)
     this.bodyEl.insertBefore(this.container, document.body.firstChild!)
-    this.isShow = true
+    this.isShow.value = true
     this.bodyEl.addEventListener("click", this.closeModal)
 
     let timerID: number = -1
@@ -35,10 +35,10 @@ export class ShutDownModalCreator {
   }
 
   dismiss() {
-    if (this.container && this.isShow) {
+    if (this.container && this.isShow.value) {
       render(null, this.container)
       document.body.removeChild(this.container)
-      this.isShow = false
+      this.isShow.value = false
       this.appEl.style.filter = "grayscale(0)"
       document.body?.removeEventListener("click", this.closeModal)
     }

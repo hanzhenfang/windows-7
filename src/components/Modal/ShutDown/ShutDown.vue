@@ -29,8 +29,6 @@ const modalWrapperStyle = computed<CSSProperties>(() => {
 nextTick(() => {
   TOP_OFFSET.value = modalWrapper.value!.offsetHeight / 2
   LEFT_OFFSET.value = modalWrapper.value!.offsetWidth / 2
-  console.log("TOP_OFFSET.value", TOP_OFFSET.value)
-  console.log("LEFT_OFFSET", LEFT_OFFSET.value)
 })
 </script>
 <template>

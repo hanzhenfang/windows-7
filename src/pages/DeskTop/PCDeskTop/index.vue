@@ -38,7 +38,12 @@ onBeforeUnmount(() => {
     <div class="w-full h-full flex flex-col">
       <!-- content -->
       <div class="w-full grow flex">
-        <IconGroup />
+        <div class="w-10% h-full">
+          <IconGroup />
+        </div>
+        <div class="h-full grow flex items-center justify-center">
+          <!-- <div class="text-100px text-black font-500">导航栏响应式交互</div> -->
+        </div>
       </div>
 
       <!-- footer left -->

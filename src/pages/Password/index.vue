@@ -7,7 +7,6 @@ import MobileLogin from "@/pages/Password/MobileLogin/index.vue"
 import PCLogin from "@/pages/Password/PCLogin/index.vue"
 import LoginFooter from "@/pages/Password/LoginFooter/index.vue"
 import IconCombination from "@/components/IconCombination/index.vue"
-import ShutDown from "@/components/Modal/ShutDown/ShutDown.vue"
 
 import { useRootStore } from "@/store/rootStore"
 import { ShutDownModalCreator } from "@/components/Modal/ShutDown/index"
@@ -72,7 +71,7 @@ function hdlClickBackBtn() {
     isChoice.value = false
     isLoginSuccess.value = false
   } else {
-    if (shutDownModal.isShow) {
+    if (shutDownModal.isShow.value) {
       shutDownModal.dismiss()
       return
     }
@@ -171,7 +170,7 @@ onMounted(() => {
           </div>
 
           <div v-else class="w-full h-full flex items-center">
-            <PCLogin />
+            <PCLogin :shutDownModal="shutDownModal.isShow" />
           </div>
         </div>
       </div>

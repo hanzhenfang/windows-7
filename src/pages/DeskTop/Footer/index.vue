@@ -13,7 +13,6 @@ const { isMobile } = storeToRefs(rootStore)
 
 const fontSize = computed(() => {
   const size = isMobile.value ? 1 : 1.8
-  console.log("size", size)
   return size
 })
 
