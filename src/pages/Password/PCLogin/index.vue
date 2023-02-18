@@ -5,15 +5,19 @@ import {
   computed,
   watch,
   nextTick,
+  onBeforeUnmount,
   CSSProperties,
   Ref,
 } from "vue"
+import { useRouter } from "vue-router"
 
 import { sleep } from "@/utils/sleep"
 
 const props = defineProps<{
   shutDownModal: Ref<boolean>
 }>()
+
+const router = useRouter()
 
 const wrapper = ref<HTMLDivElement>()
 const avatarBox = ref<HTMLDivElement>()
@@ -36,18 +40,25 @@ const wrapperStyle = computed<CSSProperties>(() => {
     height: isHover.value ? `9.5rem` : `12rem`,
     width: isHover.value ? `70%` : `80%`,
     padding: isHover.value ? `0` : `1rem`,
+    display: `flex`,
+    alignItems: `center`,
     boxShadow: isHover.value
       ? `1px 1px 5px 1px #4b5cc4`
       : `0px 1px 8px 1px rgba(255,255,255,0.2)`,
     transition: `all 1s `,
+    border: `2px solid #44cef6`,
+    borderRadius: `1rem`,
   }
 })
 
 const avatarBoxStyle = computed<CSSProperties>(() => {
   return {
+    height: `fit-content`,
     border: isHover.value ? `1px solid black` : `0.5px solid white`,
+    borderRadius: `1rem`,
     boxShadow: isHover.value ? `` : `1px 1px 10px 2px black`,
     transition: `all 1s,`,
+    overflow: `hidden`,
   }
 })
 
@@ -59,6 +70,7 @@ function collectSlideData() {
 
 function onMouseEnterAvatar() {
   if (props.shutDownModal.value) return
+  if (isUnlockSuccess.value) return
   isHover.value = true
 }
 
@@ -95,6 +107,7 @@ function onMouseMove(e: MouseEvent) {
     avatarBox.value!.style.transform = `translateX(${_offset_X}px)`
     if (_offset_X === _MAX__OFFSET_DISTANCE) {
       isUnlockSuccess.value = true
+      router.push({ name: "desktop" })
     }
   }
 
@@ -108,17 +121,16 @@ function initAvatarState() {
   isMouseDown.value = false
   isHover.value = false
   canSlide.value = false
-  avatarBox.value!.style.transform = `translateX(0px)`
   document.onmousemove = () => {}
+  if (!!avatarBox.value) avatarBox.value!.style.transform = `translateX(0px)`
 }
 
 watch(isHover, async (newValue, oldValue) => {
   if (!newValue || !isHover.value) {
     // if mouse leave the avator box, init the position.
-    // avatarBox.value!.style.position = "static"
     initAvatarState()
     return
-  } // if mouse move leave,noting to do
+  } // if mouse move out,noting to do
   await sleep(1000)
   if (!isHover.value) return
   collectSlideData()
@@ -128,14 +140,14 @@ watch(isHover, async (newValue, oldValue) => {
 nextTick(() => {
   avatarBoxOffsetHeight.value = avatarBox.value!.offsetHeight
 })
+
+onBeforeUnmount(() => {
+  initAvatarState()
+})
 </script>
 <template>
   <div class="w-full h-full flex items-center">
-    <div
-      ref="wrapper"
-      class="border-2px border-#44cef6 flex items-center rounded-1rem"
-      :style="wrapperStyle"
-    >
+    <div ref="wrapper" :style="wrapperStyle">
       <div
         ref="avatarBox"
         :style="avatarBoxStyle"
@@ -154,7 +166,7 @@ nextTick(() => {
       </div>
 
       <div
-        class="ml-2rem skew-x--20"
+        class="ml-4rem skew-x--20"
         :style="[
           isHover ? { opacity: 0 } : { opacity: 1 },
           { transition: `all 1s` },
