@@ -6,10 +6,11 @@ import IconCombination from "@/components/IconCombination/index.vue"
 
 //some options constants
 let timerID: number
-const welcomText: string = "关注一下韩振方的掘金社区帐号吧～" // will automatic printing when user first enter the page
+const welcomText: string =
+  "关注一下韩振方的掘金社区帐号吧关注一下韩振方的掘金社区帐号吧关注一下韩振方的掘金社区帐号吧关注一下韩振方的掘金社区帐号吧关注一下韩振方的掘金社区帐号吧关注一下韩振方的掘金社区帐号吧关注一下韩振方的掘金社区帐号吧关注一下韩振方的掘金社区帐号吧～" // will automatic printing when user first enter the page
 const cursorFlickerFrequency: number = 200 //control the cursor flicker frequency
-const printTextPageDuration: number = 8000 // control the duration of printing "some words page"
-const printSpeed: number = 400 // control the speed of printing word, (one word)/(printSpeed)
+const printTextPageDuration: number = 800000 // control the duration of printing "some words page"
+const printSpeed: number = 200 // control the speed of printing word, (one word)/(printSpeed)
 const loadingDuration: number = 5000 // control the duration of loadingPage
 // *********************************************
 
@@ -81,15 +82,15 @@ onBeforeMount(() => {
 </script>
 <template>
   <div class="w-full h-full bg-black">
-    <div v-if="isFlicker" class="w-full h-full flex">
-      <div class="w-fit">
+    <div v-if="isFlicker" class="w-full h-full">
+      <div class="text-box w-fit">
         <span ref="textAreas" class="text-1.8rem font-600"></span>
       </div>
 
-      <div
+      <!-- <div
         class="w-1.5rem h-2.2rem border-white"
         :class="flicker ? `border-b-0.3rem` : ``"
-      ></div>
+      ></div> -->
     </div>
 
     <Transition name="loading">
@@ -123,6 +124,25 @@ onBeforeMount(() => {
 </template>
 
 <style scoped>
+.text-box::after {
+  display: inline-block;
+  content: "";
+  width: 2rem;
+  vertical-align: text-bottom;
+  border-bottom: 3px solid white;
+  margin-left: 8px;
+  animation: flicker 0.5s linear infinite;
+}
+
+@keyframes flicker {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .loading-enter-from {
   opacity: 0;
 }
