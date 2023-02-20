@@ -32,7 +32,7 @@ onMounted(() => {
       class="w-10% h-full flex justify-between bg-[rgb(31,136,22,1)] px-1%"
       :class="isMobile ? 'w-18%' : 'w-8%'"
     >
-      <img src="@/assets/WindowsXP.png" class="w-40% object-contain" />
+      <img src="@/assets/windowsXP.png" class="w-40% object-contain" />
       <div class="h-full flex items-center">
         <span
           class="font-300 skew-x--17deg"

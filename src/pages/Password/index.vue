@@ -12,7 +12,7 @@ import { useRootStore } from "@/store/rootStore"
 import { ShutDownModalCreator } from "@/components/Modal/ShutDown/index"
 
 // some options constants
-const loadingDurationTime: number = 1000 // control IconCombination duration
+const loadingDurationTime: number = 4000 // control IconCombination duration
 //**************************************/
 
 const rootStore = useRootStore()
